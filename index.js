@@ -11,6 +11,7 @@ const bcrypt = require("bcryptjs");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
+const path = require("path")
 // -----------End Of Imports
 
 // --------------connect to mongoDB--------------
@@ -25,7 +26,20 @@ app.use("/api", routes1);
 app.use("/api", routes2);
 app.use("/api", routes3);
 app.use(express.static("build"));
-app.use(express.static(path.resolve(__dirname, "build")));
+app.use(express.static(path.resolve(__dirname, "./build")));
+app.get("/*", function (req, res) {
+  res.sendFile(
+    path.join(
+      __dirname,
+      "./build/index.html" || "./client/public/index.html"
+    ),
+    function (err) {
+      if (err) {
+        res.status(500).send(err);
+      }
+    }
+  );
+});
 
 //-----------------Middleware------------------
 
